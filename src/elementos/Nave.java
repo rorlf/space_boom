@@ -6,6 +6,7 @@
 package elementos;
 
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,9 @@ public class Nave {
     private int height;
     private boolean visible;
     private List<Tiro> tiros;
+    private int limiteMissil;
+    private int speed; 
+    private boolean turbo;
 
   
     protected Image nave_image;
@@ -38,6 +42,8 @@ public class Nave {
     tiros = new ArrayList<>();
     loadImage();    
     getImageDimensions();
+      setVisible(true);
+
     
     }
     
@@ -53,7 +59,7 @@ public class Nave {
 
     protected void loadImage() {
         
-        nave_image = new ImageIcon(this.getClass().getResource("/imagens/spaceship.png")).getImage();
+        nave_image = new ImageIcon(this.getClass().getResource("/imagens/spaceshipt.png")).getImage();
     }
 
     public Image getImage() {
@@ -84,6 +90,9 @@ public class Nave {
     public void setVisible(Boolean visible) {
         this.visible = visible;
     }
+       public Rectangle getBounds() {
+        return new Rectangle((int)x, (int)y, width, height);
+    }
     
     public void andar(){
     x+=dx;
@@ -91,9 +100,9 @@ public class Nave {
     }
     
       public void atirar() {
-           System.out.println(tiros.size());
+        if(tiros.size()<6) {  
         tiros.add(new Tiro((int)x + width, (int)y + height / 2));
-        System.out.println(tiros.get(0));
+        }
     }
     
     public void keyPressed(KeyEvent e) {

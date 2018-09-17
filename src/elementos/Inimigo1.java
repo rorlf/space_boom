@@ -5,34 +5,33 @@
  */
 package elementos;
 
-import br.com.br.area1.cg.MainFrameBase;
 import java.awt.Image;
 import java.awt.Rectangle;
 import javax.swing.ImageIcon;
- 
 
 /**
  *
  * @author Rorlf
  */
-public class Tiro {
+public class Inimigo1 {
     
-      private int x;
-    private int y;
+   private double x;
+    private double y;
     private int width;
     private int height;
+
+  
     private boolean visible;
-    private Image tiro;
-        private final int MISSILE_SPEED = 1;
+    private Image inimigo;
 
 
-    public Tiro(int x, int y) {
+    public Inimigo1(int x, int y) {
         this.x = x;
         this.y = y;
-        criarTiro();
+        criarInimigo();
     }
     
-    public void criarTiro(){
+    public void criarInimigo(){
         loadImage();    
         getImageDimensions();
         setVisible(true);
@@ -41,34 +40,43 @@ public class Tiro {
     
       public void move() {
         
-        x += MISSILE_SPEED;
-        
-        if (x > MainFrameBase.BOARD_WIDTH) {
+        x -= 0.1;
+         if (x < 0) {
             visible = false;
         }
+       
     }
+      
+      
         protected void loadImage() {
 
-          tiro = new ImageIcon(this.getClass().getResource("/imagens/gui_missile.png")).getImage();
+          inimigo = new ImageIcon(this.getClass().getResource("/imagens/enemy1.png")).getImage();
 
     }
     
     protected void getImageDimensions() {
 
-        width = tiro.getWidth(null);
-        height = tiro.getHeight(null);
+        width = inimigo.getWidth(null);
+        height = inimigo.getHeight(null);
     }    
 
     public Image getImage() {
-        return tiro;
+        return inimigo;
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
+    }
+      public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public boolean isVisible() {
@@ -78,7 +86,8 @@ public class Tiro {
     public void setVisible(Boolean visible) {
         this.visible = visible;
     }
-       public Rectangle getBounds() {
+    
+     public Rectangle getBounds() {
         return new Rectangle((int)x, (int)y, width, height);
     }
     

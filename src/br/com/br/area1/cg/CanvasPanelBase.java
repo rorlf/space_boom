@@ -5,11 +5,15 @@
  */
 package br.com.br.area1.cg;
 
+import elementos.Fase;
+import elementos.Inimigo1;
 import elementos.Nave;
 import elementos.Tiro;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -21,6 +25,9 @@ import javax.swing.JPanel;
  */
 public class CanvasPanelBase extends JPanel implements Runnable{
     private Nave nave;
+    private Fase fase;
+    private int score;
+    private boolean gameover; 
     private int inicialx=200 ,inicialy=200;
        private boolean[] key_states = new boolean[256];
        double px=280;
@@ -58,23 +65,33 @@ public class CanvasPanelBase extends JPanel implements Runnable{
     private void load(){
         addKeyListener(new KeyboardAdapter());
         setBackground(Color.BLACK);
-        
+        gameover=false;
         nave = new Nave(inicialx,inicialy);
+        fase = new Fase(1);
+                atualizarFase();
+
         
     }
 
     private void update(double dt){
+        if(gameover==false){
         atualizarNave();
         atualizarTiros();
+        atualizarInimigos();
+        checarColisao();
+        }
         
-
+        
          
     }
 
     private void draw(Graphics g){
-        Graphics2D g2d = (Graphics2D)g;
+                Graphics2D g2d = (Graphics2D)g;
+
+               
+        if(nave.isVisible()){
         g2d.drawImage(nave.getImage(), (int)nave.getX(),(int)nave.getY(), this);
-        
+        }
                
         
          
@@ -86,10 +103,44 @@ public class CanvasPanelBase extends JPanel implements Runnable{
                     tiro.getY(), this);
         }
         
+        
+        
+         List<Inimigo1> inimigos = fase.getInimigos();
+
+        for (Inimigo1 inimigo : inimigos) {
+            
+            g2d.drawImage(inimigo.getImage(), (int)inimigo.getX(),
+                    (int)inimigo.getY(),inimigo.getWidth()-25,inimigo.getHeight()-25, this);
+        }
+      
+        
+        
+        
+                     
+            Font myFont = new Font ("Arial", 1, 20); 
+             g2d.setColor(Color.white);
+            g2d.setFont(myFont);           
+            g2d.drawString(String.valueOf(score), 350, 30);
+        
+        
+         if(gameover == true){
+         Font gameover = new Font ("Arial", 1, 72);
+                 g2d.setColor(Color.pink);
+
+         g2d.setFont(gameover);
+        g2d.drawString("GAME OVER", 195, 250);
+        
+        }
     }
     
     private void atualizarNave(){
-    nave.andar();
+        if (nave.isVisible()) {
+
+                nave.andar();
+            } else {
+
+            }
+    
     }
 
     private void atualizarTiros() {
@@ -107,6 +158,66 @@ public class CanvasPanelBase extends JPanel implements Runnable{
                 tiros.remove(i);
             }
         }
+    }
+
+    private void atualizarFase() {
+        fase.povoarFase();
+    }
+
+    private void atualizarInimigos() {
+           List<Inimigo1> inimigos = fase.getInimigos();
+
+        for (int i = 0; i < inimigos.size(); i++) {
+
+            Inimigo1 inimigo = inimigos.get(i);
+
+            if (inimigo.isVisible()) {
+
+                inimigo.move();
+            } else {
+
+                inimigos.remove(i);
+                score+=10;
+            }
+        }
+        
+    }
+
+    private void checarColisao() {
+            Rectangle r3 = nave.getBounds();
+
+      List<Tiro> tiros = nave.getTiros();
+       List<Inimigo1> inimigos = fase.getInimigos();
+
+       
+       for (Inimigo1 inimigo : inimigos) {
+
+                Rectangle r2 = inimigo.getBounds();
+
+                if (r3.intersects(r2)) {
+                    
+                    gameover=true;
+                }
+            }
+       
+
+        for (Tiro tiro : tiros) {
+
+            Rectangle r1 = tiro.getBounds();
+
+            for (Inimigo1 inimigo : inimigos) {
+
+                Rectangle r2 = inimigo.getBounds();
+
+                if (r1.intersects(r2)) {
+                    
+                    inimigo.setVisible(false);
+                    tiro.setVisible(false);
+                }
+            }
+        }
+        
+        
     }
     
         public class KeyboardAdapter extends KeyAdapter{
