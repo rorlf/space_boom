@@ -101,7 +101,7 @@ public class Nave {
     
       public void atirar() {
         if(tiros.size()<6) {  
-        tiros.add(new Tiro((int)x + width, (int)y + height / 2));
+        tiros.add(new Tiro((int)x + width, (int)y + height / 2,1));
         }
     }
     

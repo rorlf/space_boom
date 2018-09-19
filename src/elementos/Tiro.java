@@ -23,12 +23,13 @@ public class Tiro {
     private int height;
     private boolean visible;
     private Image tiro;
-        private final int MISSILE_SPEED = 1;
+    private int speed = 1;
 
 
-    public Tiro(int x, int y) {
+    public Tiro(int x, int y, int speed) {
         this.x = x;
         this.y = y;
+        this.speed= speed;
         criarTiro();
     }
     
@@ -41,15 +42,18 @@ public class Tiro {
     
       public void move() {
         
-        x += MISSILE_SPEED;
+        x += speed;
         
         if (x > MainFrameBase.BOARD_WIDTH) {
+            visible = false;
+        }
+         if (x < 0 ) {
             visible = false;
         }
     }
         protected void loadImage() {
 
-          tiro = new ImageIcon(this.getClass().getResource("/imagens/gui_missile.png")).getImage();
+          tiro = new ImageIcon(this.getClass().getResource("/imagens/tiro.png")).getImage();
 
     }
     

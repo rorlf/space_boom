@@ -105,12 +105,22 @@ public class CanvasPanelBase extends JPanel implements Runnable{
         
         
         
+        
+        
+        
          List<Inimigo1> inimigos = fase.getInimigos();
 
-        for (Inimigo1 inimigo : inimigos) {
-            
+        for (Inimigo1 inimigo : inimigos) {            
             g2d.drawImage(inimigo.getImage(), (int)inimigo.getX(),
                     (int)inimigo.getY(),inimigo.getWidth()-25,inimigo.getHeight()-25, this);
+            
+            
+            tiros = inimigo.getTiros();
+            for (Tiro tiro : tiros) {
+            
+            g2d.drawImage(tiro.getImage(), tiro.getX(),
+                    tiro.getY(), this);        }
+             
         }
       
         
@@ -158,6 +168,28 @@ public class CanvasPanelBase extends JPanel implements Runnable{
                 tiros.remove(i);
             }
         }
+        
+           List<Inimigo1> inimigos = fase.getInimigos();
+
+       
+       for (Inimigo1 inimigo : inimigos) {
+
+        tiros = inimigo.getTiros();
+
+                 for (int i = 0; i < tiros.size(); i++) {
+
+            Tiro tiro = tiros.get(i);
+
+            if (tiro.isVisible()) {
+
+                tiro.move();
+            } else {
+
+                tiros.remove(i);
+            }
+        }     
+            }   
+
     }
 
     private void atualizarFase() {
@@ -174,10 +206,18 @@ public class CanvasPanelBase extends JPanel implements Runnable{
             if (inimigo.isVisible()) {
 
                 inimigo.move();
+                
+                if(inimigo.getX()<800 && (inimigo.getTipo()==2 ||inimigo.getTipo()==4 )){
+                double chanceDeTiro = Math.random() * 100;
+                if(chanceDeTiro<=0.01){
+                inimigo.atirar();
+                }
+                }
+                
             } else {
-
+                
                 inimigos.remove(i);
-                score+=10;
+                
             }
         }
         
@@ -186,7 +226,6 @@ public class CanvasPanelBase extends JPanel implements Runnable{
     private void checarColisao() {
             Rectangle r3 = nave.getBounds();
 
-      List<Tiro> tiros = nave.getTiros();
        List<Inimigo1> inimigos = fase.getInimigos();
 
        
@@ -198,8 +237,17 @@ public class CanvasPanelBase extends JPanel implements Runnable{
                     
                     gameover=true;
                 }
+                List<Tiro> tiros = inimigo.getTiros();
+                for (Tiro tiro : tiros){
+                Rectangle r4 = tiro.getBounds();
+                if (r4.intersects(r3)) {
+                    
+                    gameover=true;
+                }
+                }
             }
        
+      List<Tiro> tiros = nave.getTiros();
 
         for (Tiro tiro : tiros) {
 
@@ -210,9 +258,24 @@ public class CanvasPanelBase extends JPanel implements Runnable{
                 Rectangle r2 = inimigo.getBounds();
 
                 if (r1.intersects(r2)) {
-                    
-                    inimigo.setVisible(false);
+                    inimigo.setVida(inimigo.getVida()-1);
                     tiro.setVisible(false);
+                    if(inimigo.getVida()<=0){
+                    inimigo.setVisible(false);
+                    int tipoInimigo = inimigo.getTipo();
+                if (tipoInimigo ==1){
+                score+=10;
+                }
+                if (tipoInimigo ==2){
+                score+=50;
+                }
+                 if (tipoInimigo ==3){
+                score+=100;
+                }
+                  if (tipoInimigo ==4){
+                score+=200;
+                }
+                    }
                 }
             }
         }

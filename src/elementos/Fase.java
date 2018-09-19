@@ -40,7 +40,8 @@ public class Fase {
         for (int[] p : pos) {        
     
             
-            inimigos.add(new Inimigo1(p[0], p[1]));
+            inimigos.add(new Inimigo1(p[0],p[1],4));                    
+
             
         }
     }
