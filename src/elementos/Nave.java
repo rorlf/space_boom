@@ -28,10 +28,16 @@ public class Nave {
     private List<Tiro> tiros;
     private int limiteMissil;
     private int speed; 
+    private int vida;
+
+    
     private boolean turbo;
+    private int contadorTurboOn;
+
+    
 
   
-    protected Image nave_image;
+    protected Image nave_image,nave_image_turbo;
     
     public Nave(int x, int y) {
         this.x = x;
@@ -43,7 +49,9 @@ public class Nave {
     loadImage();    
     getImageDimensions();
       setVisible(true);
-
+      setTurbo(false);
+      contadorTurboOn=0;
+     
     
     }
     
@@ -52,18 +60,31 @@ public class Nave {
     }
     
     protected void getImageDimensions() {
-
+if(turbo==false){
         width = nave_image.getWidth(null);
         height = nave_image.getHeight(null);
+}else{
+width = nave_image_turbo.getWidth(null);
+        height = nave_image_turbo.getHeight(null);
+}
     }
 
     protected void loadImage() {
         
         nave_image = new ImageIcon(this.getClass().getResource("/imagens/spaceshipt.png")).getImage();
+        
+        nave_image_turbo = new ImageIcon(this.getClass().getResource("/imagens/spaceship-boosted.png")).getImage();
+
+        
     }
 
     public Image getImage() {
+        if(turbo==false){
         return nave_image;
+        }else{
+                return nave_image_turbo;
+
+        }
     }
     
 
@@ -83,6 +104,19 @@ public class Nave {
         this.y = y;
     }
 
+    public void setTurbo(boolean turbo) {
+        this.turbo = turbo;
+        getImageDimensions();
+
+    }
+    public int getVida() {
+        return vida;
+    }
+
+    public void setVida(int vida) {
+        this.vida = vida;
+    }
+    
     public boolean isVisible() {
         return visible;
     }
@@ -94,9 +128,21 @@ public class Nave {
         return new Rectangle((int)x, (int)y, width, height);
     }
     
-    public void andar(){
+    public void atualizar(){
     x+=dx;
     y+=dy;
+    if(turbo==true){
+    contadorTurboOn+=2;
+    }
+    if(turbo==false){
+            contadorTurboOn-=1;
+
+    }
+    if(contadorTurboOn>5000){
+                setTurbo(false);
+
+    }
+    
     }
     
       public void atirar() {
@@ -112,21 +158,33 @@ public class Nave {
         if (key == KeyEvent.VK_SPACE) {            
             atirar();
         }
-        if (key == KeyEvent.VK_LEFT) {            
+        if (key == KeyEvent.VK_LEFT) {
+            if(turbo==false)
             dx = -0.5;
+            else
+                dx = -1;
         }
 
         if (key == KeyEvent.VK_RIGHT) {
+             if(turbo==false)
             dx = 0.5;
+            else
+                dx = 1;
         }
 
         if (key == KeyEvent.VK_UP) {
-            dy = - 0.5;
+               if(turbo==false)
+            dy = -0.5;
+            else
+                dy = -1;
         }
 
         if (key == KeyEvent.VK_DOWN) {
+               if(turbo==false)
             dy = 0.5;
-        }        
+            else
+                dy = 1;
+        }
         
     }
     
@@ -149,6 +207,16 @@ public void keyReleased(KeyEvent e) {
         if (key == KeyEvent.VK_DOWN) {
             dy = 0;
         }
+        if (key == KeyEvent.VK_A) {
+            if(turbo==true){
+            setTurbo(false);
+            }
+            else{
+                        setTurbo(true);
+
+            }
+        }          
+        
     }
     
 }

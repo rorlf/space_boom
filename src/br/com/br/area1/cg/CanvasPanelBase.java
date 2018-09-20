@@ -146,7 +146,7 @@ public class CanvasPanelBase extends JPanel implements Runnable{
     private void atualizarNave(){
         if (nave.isVisible()) {
 
-                nave.andar();
+                nave.atualizar();
             } else {
 
             }
@@ -207,7 +207,7 @@ public class CanvasPanelBase extends JPanel implements Runnable{
 
                 inimigo.move();
                 
-                if(inimigo.getX()<800 && (inimigo.getTipo()==2 ||inimigo.getTipo()==4 )){
+                if(inimigo.getX()<MainFrameBase.BOARD_WIDTH && (inimigo.getTipo()==2 ||inimigo.getTipo()==4 )){
                 double chanceDeTiro = Math.random() * 100;
                 if(chanceDeTiro<=0.01){
                 inimigo.atirar();
@@ -287,7 +287,7 @@ public class CanvasPanelBase extends JPanel implements Runnable{
     
     
     public void keyReleased(KeyEvent e){
-        key_states[e.getKeyCode()] = false;
+        key_states[e.getKeyCode()] = true;
         nave.keyReleased(e);
     }
     
