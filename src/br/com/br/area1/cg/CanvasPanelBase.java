@@ -34,8 +34,8 @@ public class CanvasPanelBase extends JPanel implements Runnable{
     private Background background;
     private int score;
     private boolean gameover;
-        private Image turbo;
-        private double t;
+        private Image turbo,vida;
+        
         
 
     private int inicialx=200 ,inicialy=200;
@@ -82,6 +82,8 @@ public class CanvasPanelBase extends JPanel implements Runnable{
                 atualizarFase();
                 
          turbo = new ImageIcon(this.getClass().getResource("/imagens/turbo.png")).getImage();
+          vida = new ImageIcon(this.getClass().getResource("/imagens/heart.png")).getImage();
+
 
 
         
@@ -96,7 +98,7 @@ public class CanvasPanelBase extends JPanel implements Runnable{
         background.atualizarEstrelas(5,nave.getSpeed());
         }
         
-        t=dt;
+       
          
     }
 
@@ -111,6 +113,14 @@ public class CanvasPanelBase extends JPanel implements Runnable{
         }
         
          g2d.drawImage(turbo, 100,520,nave.getContadorTurboOn()/10,25, this);
+         
+         if(nave.getVida()>=1){
+             g2d.drawImage(vida, 20,20,vida.getHeight(this)-190,vida.getHeight(this)-190 ,this);
+             if (nave.getVida()>=2)
+             g2d.drawImage(vida, 55,20,vida.getHeight(this)-190,vida.getHeight(this)-190 ,this);
+              if (nave.getVida()>=3)
+             g2d.drawImage(vida, 90,20,vida.getHeight(this)-190,vida.getHeight(this)-190 ,this);
+         }
                  
         List<Tiro> tiros = nave.getTiros();
 
@@ -171,7 +181,9 @@ public class CanvasPanelBase extends JPanel implements Runnable{
             } else {
 
             }
-    
+    if(nave.getVida()<=0){
+    gameover=true;
+    }
     }
 
     private void atualizarTiros() {
@@ -256,14 +268,23 @@ public class CanvasPanelBase extends JPanel implements Runnable{
 
                 if (r3.intersects(r2)) {
                     
-                    gameover=true;
+                    nave.setVida(nave.getVida()-1);
+                    if(nave.getVida()>0){
+                    nave.setX(inicialx);
+                     nave.setY(inicialy);
+                    }
                 }
                 List<Tiro> tiros = inimigo.getTiros();
                 for (Tiro tiro : tiros){
                 Rectangle r4 = tiro.getBounds();
                 if (r4.intersects(r3)) {
                     
-                    gameover=true;
+                   nave.setVida(nave.getVida()-1);
+                                       if(nave.getVida()>0){
+                    nave.setX(inicialx);
+                     nave.setY(inicialy);
+                                       }
+
                 }
                 }
             }

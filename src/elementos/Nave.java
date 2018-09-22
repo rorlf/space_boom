@@ -53,6 +53,7 @@ public class Nave {
       setVisible(true);
       setTurbo(false);
       setSpeed(1);
+            setVida(3);
       contadorTurboOn=5000;
      
     
@@ -106,6 +107,7 @@ width = nave_image_turbo.getWidth(null);
     public void setY(int y) {
         this.y = y;
     }
+    
 
     public void setTurbo(boolean turbo) {
         this.turbo = turbo;
@@ -148,7 +150,7 @@ width = nave_image_turbo.getWidth(null);
     x+=dx;
     y+=dy;
     if(turbo==true){
-    contadorTurboOn-=5;
+    contadorTurboOn-=4;
     speed=2;
     }
     if(turbo==false){
