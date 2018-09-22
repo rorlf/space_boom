@@ -24,6 +24,8 @@ public class Nave {
 
     private int width;
     private int height;
+
+   
     private boolean visible;
     private List<Tiro> tiros;
     private int limiteMissil;
@@ -50,7 +52,8 @@ public class Nave {
     getImageDimensions();
       setVisible(true);
       setTurbo(false);
-      contadorTurboOn=0;
+      setSpeed(1);
+      contadorTurboOn=5000;
      
     
     }
@@ -117,6 +120,19 @@ width = nave_image_turbo.getWidth(null);
         this.vida = vida;
     }
     
+     public int getContadorTurboOn() {
+        return contadorTurboOn;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+     
+    
     public boolean isVisible() {
         return visible;
     }
@@ -132,13 +148,15 @@ width = nave_image_turbo.getWidth(null);
     x+=dx;
     y+=dy;
     if(turbo==true){
-    contadorTurboOn+=2;
+    contadorTurboOn-=5;
+    speed=2;
     }
     if(turbo==false){
-            contadorTurboOn-=1;
-
+        if(contadorTurboOn<5000)
+            contadorTurboOn+=1;
+             speed=1;
     }
-    if(contadorTurboOn>5000){
+    if(contadorTurboOn<0){
                 setTurbo(false);
 
     }

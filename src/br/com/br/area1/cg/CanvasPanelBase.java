@@ -5,6 +5,8 @@
  */
 package br.com.br.area1.cg;
 
+import elementos.Background;
+import elementos.Estrela;
 import elementos.Fase;
 import elementos.Inimigo1;
 import elementos.Nave;
@@ -13,10 +15,13 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.List;
+import java.util.Random;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 /**
@@ -26,8 +31,13 @@ import javax.swing.JPanel;
 public class CanvasPanelBase extends JPanel implements Runnable{
     private Nave nave;
     private Fase fase;
+    private Background background;
     private int score;
-    private boolean gameover; 
+    private boolean gameover;
+        private Image turbo;
+        private double t;
+        
+
     private int inicialx=200 ,inicialy=200;
        private boolean[] key_states = new boolean[256];
        double px=280;
@@ -67,8 +77,12 @@ public class CanvasPanelBase extends JPanel implements Runnable{
         setBackground(Color.BLACK);
         gameover=false;
         nave = new Nave(inicialx,inicialy);
+        background = new Background();
         fase = new Fase(1);
                 atualizarFase();
+                
+         turbo = new ImageIcon(this.getClass().getResource("/imagens/turbo.png")).getImage();
+
 
         
     }
@@ -79,22 +93,25 @@ public class CanvasPanelBase extends JPanel implements Runnable{
         atualizarTiros();
         atualizarInimigos();
         checarColisao();
+        background.atualizarEstrelas(5,nave.getSpeed());
         }
         
-        
+        t=dt;
          
     }
 
     private void draw(Graphics g){
                 Graphics2D g2d = (Graphics2D)g;
-
-               
-        if(nave.isVisible()){
-        g2d.drawImage(nave.getImage(), (int)nave.getX(),(int)nave.getY(), this);
+ 
+                List<Estrela> estrelas = background.getEstrelas();
+                
+                for (Estrela estrela : estrelas) {
+            g.setColor(Color.white);
+            g.fillOval(estrela.getX(), estrela.getY(), estrela.getTamanho(), estrela.getTamanho());
         }
-               
         
-         
+         g2d.drawImage(turbo, 100,520,nave.getContadorTurboOn()/10,25, this);
+                 
         List<Tiro> tiros = nave.getTiros();
 
         for (Tiro tiro : tiros) {
@@ -131,6 +148,10 @@ public class CanvasPanelBase extends JPanel implements Runnable{
              g2d.setColor(Color.white);
             g2d.setFont(myFont);           
             g2d.drawString(String.valueOf(score), 350, 30);
+            
+             if(nave.isVisible()){
+        g2d.drawImage(nave.getImage(), (int)nave.getX(),(int)nave.getY(), this);
+        }
         
         
          if(gameover == true){
@@ -288,12 +309,25 @@ public class CanvasPanelBase extends JPanel implements Runnable{
     
     public void keyReleased(KeyEvent e){
         key_states[e.getKeyCode()] = true;
+                if(gameover==false){
         nave.keyReleased(e);
+                }
     }
     
     public void keyPressed(KeyEvent e){
         key_states[e.getKeyCode()] = true;
+                if(gameover==false){
         nave.keyPressed(e);
+        }
+        if(gameover==true){
+        if (key_states[KeyEvent.VK_ENTER]){
+            nave = new Nave(inicialx,inicialy);
+                            atualizarFase();
+                            gameover=false;
+
+            }
+        
+        }
     }
     
     
