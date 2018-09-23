@@ -5,6 +5,7 @@
  */
 package elementos;
 
+import br.com.br.area1.cg.MainFrameBase;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
@@ -24,16 +25,19 @@ public class Nave {
 
     private int width;
     private int height;
-
+private Inimigo1 alvo[];
    
     private boolean visible;
     private List<Tiro> tiros;
+        private List<Missil> misseis;
     private int limiteMissil;
     private int speed; 
     private int vida;
 
     
     private boolean turbo;
+        private boolean invulneravel;
+
     private int contadorTurboOn;
 
     
@@ -48,6 +52,8 @@ public class Nave {
     }
     private void criarnave(){
     tiros = new ArrayList<>();
+        misseis = new ArrayList<>();
+
     loadImage();    
     getImageDimensions();
       setVisible(true);
@@ -55,12 +61,18 @@ public class Nave {
       setSpeed(1);
             setVida(3);
       contadorTurboOn=5000;
+      limiteMissil=3;
+      invulneravel=false;
      
     
     }
     
       public List<Tiro> getTiros() {
         return tiros;
+    }
+
+    public List<Missil> getMisseis() {
+        return misseis;
     }
     
     protected void getImageDimensions() {
@@ -107,6 +119,15 @@ width = nave_image_turbo.getWidth(null);
     public void setY(int y) {
         this.y = y;
     }
+
+    public boolean isInvulneravel() {
+        return invulneravel;
+    }
+
+    public void setInvulneravel(boolean invulneravel) {
+        this.invulneravel = invulneravel;
+    }
+    
     
 
     public void setTurbo(boolean turbo) {
@@ -119,6 +140,7 @@ width = nave_image_turbo.getWidth(null);
     }
 
     public void setVida(int vida) {
+        
         this.vida = vida;
     }
     
@@ -147,7 +169,8 @@ width = nave_image_turbo.getWidth(null);
     }
     
     public void atualizar(){
-    x+=dx;
+        x+=dx;
+    
     y+=dy;
     if(turbo==true){
     contadorTurboOn-=4;
@@ -170,6 +193,17 @@ width = nave_image_turbo.getWidth(null);
         tiros.add(new Tiro((int)x + width, (int)y + height / 2,1));
         }
     }
+      
+         public void atirarMissil(Inimigo1 alvo) {
+         if(limiteMissil>0){
+        misseis.add(new Missil(x + width, y + height / 2,alvo));
+         limiteMissil-=1;}
+        
+    }
+         
+         public void checarAlvo(){
+         
+         }
     
     public void keyPressed(KeyEvent e) {
 
@@ -178,7 +212,9 @@ width = nave_image_turbo.getWidth(null);
         if (key == KeyEvent.VK_SPACE) {            
             atirar();
         }
+        
         if (key == KeyEvent.VK_LEFT) {
+           
             if(turbo==false)
             dx = -0.5;
             else
@@ -188,8 +224,10 @@ width = nave_image_turbo.getWidth(null);
         if (key == KeyEvent.VK_RIGHT) {
              if(turbo==false)
             dx = 0.5;
-            else
+             
+             else
                 dx = 1;
+             
         }
 
         if (key == KeyEvent.VK_UP) {

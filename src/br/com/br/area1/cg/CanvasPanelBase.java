@@ -9,6 +9,7 @@ import elementos.Background;
 import elementos.Estrela;
 import elementos.Fase;
 import elementos.Inimigo1;
+import elementos.Missil;
 import elementos.Nave;
 import elementos.Tiro;
 import java.awt.Color;
@@ -31,8 +32,9 @@ import javax.swing.JPanel;
 public class CanvasPanelBase extends JPanel implements Runnable{
     private Nave nave;
     private Fase fase;
+    private Missil missil;
     private Background background;
-    private int score;
+    private int score,flag=0,contInvul=0;
     private boolean gameover;
         private Image turbo,vida;
         
@@ -82,7 +84,7 @@ public class CanvasPanelBase extends JPanel implements Runnable{
                 atualizarFase();
                 
          turbo = new ImageIcon(this.getClass().getResource("/imagens/turbo.png")).getImage();
-          vida = new ImageIcon(this.getClass().getResource("/imagens/heart.png")).getImage();
+          vida = new ImageIcon(this.getClass().getResource("/imagens/gui_spaceship.png")).getImage();
 
 
 
@@ -95,7 +97,10 @@ public class CanvasPanelBase extends JPanel implements Runnable{
         atualizarTiros();
         atualizarInimigos();
         checarColisao();
+        checarInvulnerabilidade();
         background.atualizarEstrelas(5,nave.getSpeed());
+        
+
         }
         
        
@@ -104,6 +109,8 @@ public class CanvasPanelBase extends JPanel implements Runnable{
 
     private void draw(Graphics g){
                 Graphics2D g2d = (Graphics2D)g;
+                
+                
  
                 List<Estrela> estrelas = background.getEstrelas();
                 
@@ -115,11 +122,11 @@ public class CanvasPanelBase extends JPanel implements Runnable{
          g2d.drawImage(turbo, 100,520,nave.getContadorTurboOn()/10,25, this);
          
          if(nave.getVida()>=1){
-             g2d.drawImage(vida, 20,20,vida.getHeight(this)-190,vida.getHeight(this)-190 ,this);
+             g2d.drawImage(vida, 20,20,this);
              if (nave.getVida()>=2)
-             g2d.drawImage(vida, 55,20,vida.getHeight(this)-190,vida.getHeight(this)-190 ,this);
+             g2d.drawImage(vida, 55,20,this);
               if (nave.getVida()>=3)
-             g2d.drawImage(vida, 90,20,vida.getHeight(this)-190,vida.getHeight(this)-190 ,this);
+             g2d.drawImage(vida, 90,20,this);
          }
                  
         List<Tiro> tiros = nave.getTiros();
@@ -130,6 +137,12 @@ public class CanvasPanelBase extends JPanel implements Runnable{
                     tiro.getY(), this);
         }
         
+                List<Missil> misseis = nave.getMisseis();
+             for (Missil missil : misseis) {
+            
+            g2d.drawImage(missil.getImage(), (int)missil.getX(),
+                    (int)missil.getY(), this);
+        }
         
         
         
@@ -159,7 +172,11 @@ public class CanvasPanelBase extends JPanel implements Runnable{
             g2d.setFont(myFont);           
             g2d.drawString(String.valueOf(score), 350, 30);
             
-             if(nave.isVisible()){
+             if(nave.isVisible() && !nave.isInvulneravel()){
+        g2d.drawImage(nave.getImage(), (int)nave.getX(),(int)nave.getY(), this);
+        }
+             
+                 if(nave.isVisible() && nave.isInvulneravel()&& contInvul%5==0 ){
         g2d.drawImage(nave.getImage(), (int)nave.getX(),(int)nave.getY(), this);
         }
         
@@ -221,7 +238,25 @@ public class CanvasPanelBase extends JPanel implements Runnable{
                 tiros.remove(i);
             }
         }     
-            }   
+            }
+       
+               List<Missil> misseis = nave.getMisseis();
+
+           for (int i = 0; i < misseis.size(); i++) {
+
+            Missil missil = misseis.get(i);
+            
+            
+            if (missil.isVisible()) {
+                if(missil.getAlvo().isVisible()==false){
+                missil.setAlvo(inimigoPertoMissil(missil));
+                }
+                missil.move();
+            } else {
+
+                misseis.remove(i);
+            }
+        }
 
     }
 
@@ -267,23 +302,28 @@ public class CanvasPanelBase extends JPanel implements Runnable{
                 Rectangle r2 = inimigo.getBounds();
 
                 if (r3.intersects(r2)) {
-                    
+                    if(!nave.isInvulneravel()){
                     nave.setVida(nave.getVida()-1);
                     if(nave.getVida()>0){
                     nave.setX(inicialx);
                      nave.setY(inicialy);
+                                          nave.setInvulneravel(true);
+
                     }
-                }
+                }}
                 List<Tiro> tiros = inimigo.getTiros();
                 for (Tiro tiro : tiros){
                 Rectangle r4 = tiro.getBounds();
                 if (r4.intersects(r3)) {
-                    
+                    if(!nave.isInvulneravel()){
                    nave.setVida(nave.getVida()-1);
                                        if(nave.getVida()>0){
                     nave.setX(inicialx);
                      nave.setY(inicialy);
-                                       }
+                     nave.setInvulneravel(true);
+                                       }}
+                                       
+                                       
 
                 }
                 }
@@ -323,7 +363,90 @@ public class CanvasPanelBase extends JPanel implements Runnable{
         }
         
         
+        
+        
+        
+        
+          List<Missil> misseis = nave.getMisseis();
+
+        for (Missil missil : misseis) {
+
+            Rectangle r1 = missil.getBounds();
+
+            for (Inimigo1 inimigo : inimigos) {
+
+                Rectangle r2 = inimigo.getBounds();
+
+                if (r1.intersects(r2)) {
+                    inimigo.setVida(inimigo.getVida()-5);
+                    missil.setVisible(false);
+                    if(inimigo.getVida()<=0){
+                    inimigo.setVisible(false);
+                    int tipoInimigo = inimigo.getTipo();
+                if (tipoInimigo ==1){
+                score+=10;
+                }
+                if (tipoInimigo ==2){
+                score+=50;
+                }
+                 if (tipoInimigo ==3){
+                score+=100;
+                }
+                  if (tipoInimigo ==4){
+                score+=200;
+                }
+                    }
+                }
+            }
+        }
+        
+        
     }
+    
+    private Inimigo1 inimigoPerto(){
+         List<Inimigo1> inimigos = fase.getInimigos();
+double distancia=99999999;
+Inimigo1 escolhido = null;
+
+        for (int i = 0; i < inimigos.size(); i++) {
+
+            Inimigo1 inimigo = inimigos.get(i);
+            if(Math.sqrt(Math.pow(inimigo.getX() - nave.getX(), 2) + Math.pow(inimigo.getY() - nave.getY(), 2))<distancia){
+                distancia=Math.sqrt(Math.pow(inimigo.getX() - nave.getX(), 2) + Math.pow(inimigo.getY() - nave.getY(), 2));
+                escolhido=inimigo;
+            }            
+        }
+return escolhido;
+    }
+    
+       private Inimigo1 inimigoPertoMissil(Missil missil){
+         List<Inimigo1> inimigos = fase.getInimigos();
+double distancia=99999999;
+Inimigo1 escolhido = null;
+
+        for (int i = 0; i < inimigos.size(); i++) {
+
+            Inimigo1 inimigo = inimigos.get(i);
+            if(Math.sqrt(Math.pow(inimigo.getX() - missil.getX(), 2) + Math.pow(inimigo.getY() - missil.getY(), 2))<distancia){
+                distancia=Math.sqrt(Math.pow(inimigo.getX() - missil.getX(), 2) + Math.pow(inimigo.getY() - missil.getY(), 2));
+                escolhido=inimigo;
+            }            
+        }
+return escolhido;
+    }
+       
+       
+       
+       
+       public void checarInvulnerabilidade(){
+       if(nave.isInvulneravel()){
+       contInvul++;
+       if(contInvul>800){
+       nave.setInvulneravel(false);
+       contInvul=0;
+       }
+       }
+       }
     
         public class KeyboardAdapter extends KeyAdapter{
     
@@ -339,14 +462,20 @@ public class CanvasPanelBase extends JPanel implements Runnable{
         key_states[e.getKeyCode()] = true;
                 if(gameover==false){
         nave.keyPressed(e);
+                if (key_states[KeyEvent.VK_Z]){
+                nave.atirarMissil(inimigoPerto());
+                }
         }
         if(gameover==true){
         if (key_states[KeyEvent.VK_ENTER]){
             nave = new Nave(inicialx,inicialy);
                             atualizarFase();
                             gameover=false;
+                            
 
             }
+        
+      
         
         }
     }

@@ -47,7 +47,7 @@ public class Tiro {
         if (x > MainFrameBase.BOARD_WIDTH) {
             visible = false;
         }
-         if (x < 0 ) {
+         if (x <= 0 ) {
             visible = false;
         }
     }

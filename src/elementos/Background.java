@@ -64,6 +64,28 @@ public class Background {
         }
          }
          }
+          
+              if(velocidade==3){
+         if(tempo>30){
+              for (Estrela estrela : estrelas) {
+                     Random random = new Random();
+                   estrela.setX(random.nextInt(800));
+                   estrela.setY(random.nextInt(600));
+                   tempo=0;
+        }
+         }
+         }
+              
+                  if(velocidade==4){
+         if(tempo>10){
+              for (Estrela estrela : estrelas) {
+                     Random random = new Random();
+                   estrela.setX(random.nextInt(800));
+                   estrela.setY(random.nextInt(600));
+                   tempo=0;
+        }
+         }
+         }
          
          
          }
