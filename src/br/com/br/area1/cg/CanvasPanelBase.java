@@ -11,6 +11,7 @@ import elementos.Fase;
 import elementos.Inimigo1;
 import elementos.Missil;
 import elementos.Nave;
+import elementos.PowerUp;
 import elementos.Tiro;
 import java.awt.Color;
 import java.awt.Font;
@@ -27,16 +28,16 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author oberdan
+ * @author 
  */
 public class CanvasPanelBase extends JPanel implements Runnable{
     private Nave nave;
     private Fase fase;
-    private Missil missil;
+    
     private Background background;
     private int score,flag=0,contInvul=0;
-    private boolean gameover;
-        private Image turbo,vida;
+    private boolean gameover,paused;
+        private Image turbo,vida,missilArmory;
         
         
 
@@ -78,13 +79,14 @@ public class CanvasPanelBase extends JPanel implements Runnable{
         addKeyListener(new KeyboardAdapter());
         setBackground(Color.BLACK);
         gameover=false;
+                paused=false;
         nave = new Nave(inicialx,inicialy);
         background = new Background();
-        fase = new Fase(1);
-                atualizarFase();
+        fase = new Fase(0);
                 
          turbo = new ImageIcon(this.getClass().getResource("/imagens/turbo.png")).getImage();
           vida = new ImageIcon(this.getClass().getResource("/imagens/gui_spaceship.png")).getImage();
+          missilArmory= new ImageIcon(this.getClass().getResource("/imagens/gui_missile.png")).getImage();
 
 
 
@@ -92,12 +94,14 @@ public class CanvasPanelBase extends JPanel implements Runnable{
     }
 
     private void update(double dt){
-        if(gameover==false){
+        if(gameover==false && !fase.isPaused()){
         atualizarNave();
         atualizarTiros();
         atualizarInimigos();
         checarColisao();
         checarInvulnerabilidade();
+        atualizarPowerUps();
+        atualizarFase();
         background.atualizarEstrelas(5,nave.getSpeed());
         
 
@@ -128,6 +132,16 @@ public class CanvasPanelBase extends JPanel implements Runnable{
               if (nave.getVida()>=3)
              g2d.drawImage(vida, 90,20,this);
          }
+           if(nave.getLimiteMissil()>=1){
+             g2d.drawImage(missilArmory, 630,20,this);
+             if (nave.getLimiteMissil()>=2)
+             g2d.drawImage(missilArmory, 665,20,this);
+              if (nave.getLimiteMissil()>=3)
+             g2d.drawImage(missilArmory, 700,20,this);
+         }
+         
+         
+         
                  
         List<Tiro> tiros = nave.getTiros();
 
@@ -152,7 +166,7 @@ public class CanvasPanelBase extends JPanel implements Runnable{
 
         for (Inimigo1 inimigo : inimigos) {            
             g2d.drawImage(inimigo.getImage(), (int)inimigo.getX(),
-                    (int)inimigo.getY(),inimigo.getWidth()-25,inimigo.getHeight()-25, this);
+                    (int)inimigo.getY(),inimigo.getWidth()-15,inimigo.getHeight()-15, this);
             
             
             tiros = inimigo.getTiros();
@@ -163,7 +177,12 @@ public class CanvasPanelBase extends JPanel implements Runnable{
              
         }
       
-        
+         List<PowerUp> powerUps = fase.getPowerUps();
+
+        for (PowerUp powerUp : powerUps) {            
+            g2d.drawImage(powerUp.getImage(), (int)powerUp.getX(),
+                    (int)powerUp.getY(), this);
+        }
         
         
                      
@@ -187,6 +206,22 @@ public class CanvasPanelBase extends JPanel implements Runnable{
 
          g2d.setFont(gameover);
         g2d.drawString("GAME OVER", 195, 250);
+        
+        }
+         
+          Font wait = new Font ("Arial", 1, 72);
+                 g2d.setColor(Color.red);
+
+         g2d.setFont(wait);
+        g2d.drawString(fase.stringFase(), 220, 250);
+         
+         
+          if(fase.isPaused()){
+         Font paused = new Font ("Arial", 1, 72);
+                 g2d.setColor(Color.pink);
+
+         g2d.setFont(paused);
+        g2d.drawString("Pause", 195, 250);
         
         }
     }
@@ -259,9 +294,28 @@ public class CanvasPanelBase extends JPanel implements Runnable{
         }
 
     }
+    
+    private void atualizarPowerUps(){
+                     List<PowerUp> powerUps = fase.getPowerUps();
+              for (int i = 0; i < powerUps.size(); i++) {
+
+            PowerUp powerUp = powerUps.get(i);
+            
+            
+            if (powerUp.isVisible()) {
+               
+                powerUp.move();
+            } else {
+
+                powerUps.remove(i);
+            }
+        }
+    }
+    
 
     private void atualizarFase() {
-        fase.povoarFase();
+        fase.povoarFase();        
+      
     }
 
     private void atualizarInimigos() {
@@ -286,6 +340,7 @@ public class CanvasPanelBase extends JPanel implements Runnable{
                 
                 inimigos.remove(i);
                 
+                
             }
         }
         
@@ -294,6 +349,33 @@ public class CanvasPanelBase extends JPanel implements Runnable{
     private void checarColisao() {
             Rectangle r3 = nave.getBounds();
 
+            
+               List<PowerUp> powerUps = fase.getPowerUps();
+              for (PowerUp powerUp : powerUps) {
+
+                            Rectangle r2 = powerUp.getBounds();
+                            
+                           if(r3.intersects(r2)){
+                           if(powerUp.getTipo()==2){
+                               if(nave.getVida()<3){
+                           nave.setVida(nave.getVida()+1);
+                                                          powerUp.setVisible(false);}
+
+                           }
+                           if(powerUp.getTipo()==1){
+                               if(nave.getLimiteMissil()<3){
+                           nave.setLimiteMissil(nave.getLimiteMissil()+1);
+                                                          powerUp.setVisible(false);}
+
+                           }
+                           } 
+                            
+}
+            
+            
+            
+            
+            
        List<Inimigo1> inimigos = fase.getInimigos();
 
        
@@ -343,6 +425,7 @@ public class CanvasPanelBase extends JPanel implements Runnable{
                     inimigo.setVida(inimigo.getVida()-1);
                     tiro.setVisible(false);
                     if(inimigo.getVida()<=0){
+                        fase.newPowerUp(inimigo.getX(), inimigo.getY());
                     inimigo.setVisible(false);
                     int tipoInimigo = inimigo.getTipo();
                 if (tipoInimigo ==1){
@@ -381,6 +464,7 @@ public class CanvasPanelBase extends JPanel implements Runnable{
                     inimigo.setVida(inimigo.getVida()-5);
                     missil.setVisible(false);
                     if(inimigo.getVida()<=0){
+                                                fase.newPowerUp(inimigo.getX(), inimigo.getY());
                     inimigo.setVisible(false);
                     int tipoInimigo = inimigo.getTipo();
                 if (tipoInimigo ==1){
@@ -399,6 +483,8 @@ public class CanvasPanelBase extends JPanel implements Runnable{
                 }
             }
         }
+        
+        
         
         
     }
@@ -452,6 +538,7 @@ return escolhido;
     
     
     public void keyReleased(KeyEvent e){
+        fase.keyReleased(e);
         key_states[e.getKeyCode()] = true;
                 if(gameover==false){
         nave.keyReleased(e);
@@ -460,24 +547,27 @@ return escolhido;
     
     public void keyPressed(KeyEvent e){
         key_states[e.getKeyCode()] = true;
-                if(gameover==false){
-        nave.keyPressed(e);
+        fase.keyPressed(e);
+        
+                if(gameover==false && !fase.isPaused()){
+        nave.keyPressed(e);        
                 if (key_states[KeyEvent.VK_Z]){
                 nave.atirarMissil(inimigoPerto());
                 }
+               
         }
         if(gameover==true){
         if (key_states[KeyEvent.VK_ENTER]){
             nave = new Nave(inicialx,inicialy);
                             atualizarFase();
-                            gameover=false;
-                            
+                            gameover=false; 
+                            score=0;
 
-            }
-        
-      
-        
+            }      
+             
         }
+        
+         
     }
     
     

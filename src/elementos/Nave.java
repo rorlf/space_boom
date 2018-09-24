@@ -26,7 +26,7 @@ public class Nave {
     private int width;
     private int height;
 private Inimigo1 alvo[];
-   
+   private Sound somTiro, somMissil;
     private boolean visible;
     private List<Tiro> tiros;
         private List<Missil> misseis;
@@ -63,6 +63,10 @@ private Inimigo1 alvo[];
       contadorTurboOn=5000;
       limiteMissil=3;
       invulneravel=false;
+                                somTiro = new Sound("D:\\Rorlf\\java2d\\Space_Boom\\src\\sounds\\Laser.wav");
+                                                           somMissil = new Sound("D:\\Rorlf\\java2d\\Space_Boom\\src\\sounds\\Missil.wav");
+
+
      
     
     }
@@ -143,6 +147,14 @@ width = nave_image_turbo.getWidth(null);
         
         this.vida = vida;
     }
+
+    public int getLimiteMissil() {
+        return limiteMissil;
+    }
+
+    public void setLimiteMissil(int limiteMissil) {
+        this.limiteMissil = limiteMissil;
+    }
     
      public int getContadorTurboOn() {
         return contadorTurboOn;
@@ -189,13 +201,16 @@ width = nave_image_turbo.getWidth(null);
     }
     
       public void atirar() {
-        if(tiros.size()<6) {  
+        if(tiros.size()<4) {  
+                                      somTiro.play();
+
         tiros.add(new Tiro((int)x + width, (int)y + height / 2,1));
         }
     }
       
          public void atirarMissil(Inimigo1 alvo) {
          if(limiteMissil>0){
+                          somMissil.play();
         misseis.add(new Missil(x + width, y + height / 2,alvo));
          limiteMissil-=1;}
         
@@ -211,6 +226,7 @@ width = nave_image_turbo.getWidth(null);
 
         if (key == KeyEvent.VK_SPACE) {            
             atirar();
+
         }
         
         if (key == KeyEvent.VK_LEFT) {

@@ -23,7 +23,7 @@ public class Missil {
     private int height;
     private boolean visible=false;
     private Image missil;
-    private int speed = 1;
+    private double speed = 0.2;
     private Inimigo1 alvo;
                 private int t = 0;
 
@@ -53,8 +53,8 @@ public class Missil {
            
               public void move() {
                   t++;
-        x = x +speed*Math.cos(calcularAngulo())*(t/150);
-        y = y +speed*Math.sin(calcularAngulo())*(t/150);
+        x = x +speed*Math.cos(calcularAngulo())*(t/50);
+        y = y +speed*Math.sin(calcularAngulo())*(t/50);
 
       
     }

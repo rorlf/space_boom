@@ -5,8 +5,10 @@
  */
 package elementos;
 
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -15,40 +17,285 @@ import java.util.List;
 public class Fase {
     private int level;
     private int x=0;
+    private boolean paused,flag,wait,gameover;
+private int t,tempowait=0;
+private int contador1,contador2,contador3,contador4;
+  
     private List<Inimigo1> inimigos;
-   private final int[][] pos = {
-        {2380, 29}, {2500, 59}, {1380, 89},
-        {780, 109}, {580, 139}, {680, 239},
-        {790, 259}, {760, 50}, {790, 150},
-        {980, 209}, {560, 45}, {510, 70},
-        {930, 159}, {590, 80}, {530, 60},
-        {940, 59}, {990, 30}, {920, 200},
-        {900, 259}, {660, 50}, {540, 90},
-        {810, 220}, {860, 20}, {740, 180},
-        {820, 128}, {490, 170}, {700, 30}
-    };
+    
+    private List<PowerUp> powerUps;
+
 
     public Fase(int level) {
         this.level = level;
         x=0;
+        paused=false;
+        flag=false;
+        powerUps= new ArrayList<>();
+                         inimigos = new ArrayList<>();
+                         contador1=0 ;
+                           contador2=0;
+                           contador3=0;
+                           contador4=0;
+                         wait=true;
+                         
+             
+
     }
     
-    public void povoarFase(){ 
-                 inimigos = new ArrayList<>();
-
-        if(level==1){
-        for (int[] p : pos) {        
     
-            
-            inimigos.add(new Inimigo1(p[0],p[1],3));                    
-
-            
+    public void newPowerUp(double x, double y){
+        Random random = new Random();
+        
+        if(random.nextInt(100)<=10){
+    powerUps.add(new PowerUp(x,y,1));
+        return;}
+        
+        if(random.nextInt(100)>=90){
+    powerUps.add(new PowerUp(x,y,2));
+    return;
         }
     }
-        
+    
+    public void checarFase(){
+    if( contador1==0 && contador2==0 && contador3==0 && contador4==0){
+            wait=true;
+             tempowait+=1;
+
+            if(tempowait>1000){
+                           level+=1;
+
+           if(level<=10)
+           setFases();
+            }
+    }
+    }
+    
+    public String stringFase(){
+    if(wait==true && level>=0 && level<=10){
+        return "Fase "+String.valueOf(level+1);}
+    
+    return "";
+    }
+    
+   
+    
+    public void povoarFase(){ 
+        checarFase();
+        if(wait==false){
+        if(t>500){              
+    
+            
+            inimigos.add(new Inimigo1(getlocalX(),getlocaly(),tipo())); 
+                                    
+        t=0;   
+    }
+              t++;}
+  
+    }
+    private int tipo(){
+        int c1=contador1;
+           int c2=contador2;
+               int c3=contador3;
+                  int c4=contador4;
+    if(c1>0||c2>0||c3>0||c4>0){
+         Random random = new Random();
+
+         while(c1==contador1 && c2==contador2 && c3==contador3 && c4==contador4){
+                              int valor =random.nextInt(5);
+ if(valor==1){
+        if(c1>0){
+        contador1-=1;
+        return 1;
+        }
+        }
+ if(valor==2){
+        if(c2>0){
+        contador2-=1;
+        return 2;
+        }
+        }
+ 
+    if(valor==3){
+        if(c3>0){
+        contador3-=1;
+        return 1;
+        }
+        }
+    
+    if(valor==4){
+        if(c4>0){
+        contador4-=1;
+        return 4;
+        }
+        }
+    
+    
+         }
+    }
+    return 0;
+    }
+        private int getlocaly(){
+     Random random = new Random();
+        int valor =random.nextInt(5);
+        if(valor==5){
+        return 40;
+        }
+        if(valor==4){
+        return 120;
+        }
+        if(valor==3){
+        return 200;
+        }
+        if(valor==2){
+        return 280;
+        }
+         if(valor==1){
+        return 440;
+        }
+         
+        return 360;
+    }
+    private int getlocalX(){
+     Random random = new Random();
+                int valor =random.nextInt(5);
+
+        if(valor==5){
+        return 820;
+        }
+        if(valor==4){
+        return 850;
+        }
+        if(valor==3){
+        return 880;
+        }
+        if(valor==2){
+        return 840;
+        }
+        return 900;
     }
     public List<Inimigo1> getInimigos(){
     return inimigos;
     }
     
+     public List<PowerUp> getPowerUps(){
+    return powerUps;
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public boolean isGameover() {
+        return gameover;
+    }
+    
+    
+    
+    public void keyPressed(KeyEvent e) {
+            int key = e.getKeyCode();
+            
+            if (paused==false && key == KeyEvent.VK_ESCAPE && flag==false){
+            paused=true;
+            
+            }
+            if (paused==true && key == KeyEvent.VK_ESCAPE && flag==true ){
+            paused=false;
+            }
+            
+            
+            
+               if (gameover==false && key == KeyEvent.VK_ESCAPE && flag==false){
+            gameover=true;
+            
+            }
+            if (gameover==true && key == KeyEvent.VK_ENTER  ){
+            gameover=false;
+            }
+
+    }
+    
+        
+public void keyReleased(KeyEvent e) {
+
+        int key = e.getKeyCode();
+        if (paused==true && key == KeyEvent.VK_ESCAPE && flag==false){
+            flag=true;            
+            }
+        
+         if (paused==false && key == KeyEvent.VK_ESCAPE && flag==true){
+            flag=false;            
+            }
+        
+}
+
+
+
+
+
+ private void setFases(){
+    if(tempowait>500){
+    if(level==1){
+      contador1=10;
+      contador2=0;
+      contador3=0;
+      contador4=0; 
+    }
+     if(level==2){
+      contador1=0;
+      contador2=10;
+      contador3=0;
+      contador4=0; 
+    }
+      if(level==3){
+      contador1=25;
+      contador2=20;
+      contador3=10;
+      contador4=0; 
+    }
+       if(level==4){
+      contador1=30;
+      contador2=25;
+      contador3=20;
+      contador4=0; 
+    }
+        if(level==5){
+      contador1=35;
+      contador2=35;
+      contador3=35;
+      contador4=0; 
+    }
+         if(level==6){
+      contador1=40;
+      contador2=35;
+      contador3=35;
+      contador4=0; 
+    }
+          if(level==7){
+      contador1=60;
+      contador2=50;
+      contador3=35;
+      contador4=0; 
+    }
+           if(level==8){
+      contador1=20;
+      contador2=30;
+      contador3=20;
+      contador4=10; 
+    }
+                      if(level==9){
+      contador1=50;
+      contador2=50;
+      contador3=50;
+      contador4=30; 
+    }
+                                 if(level==10){
+      contador1=0;
+      contador2=80;
+      contador3=70;
+      contador4=70; 
+    }
+    wait=false;
+    tempowait=0;
+    }}
 }
