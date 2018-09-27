@@ -539,26 +539,22 @@ return escolhido;
     
     public void keyReleased(KeyEvent e){
         fase.keyReleased(e);
-        key_states[e.getKeyCode()] = true;
                 if(gameover==false){
         nave.keyReleased(e);
                 }
-    }
-    
-    public void keyPressed(KeyEvent e){
-        key_states[e.getKeyCode()] = true;
-        fase.keyPressed(e);
-        
-                if(gameover==false && !fase.isPaused()){
-        nave.keyPressed(e);        
-                if (key_states[KeyEvent.VK_Z]){
+                
+                      if(gameover==false && !fase.isPaused() && !fase.getInimigos().isEmpty()){
+             
+                if (e.getKeyCode()== KeyEvent.VK_Z){
                 nave.atirarMissil(inimigoPerto());
                 }
                
         }
-        if(gameover==true){
-        if (key_states[KeyEvent.VK_ENTER]){
+                      
+                      if(gameover==true){
+        if (e.getKeyCode()== KeyEvent.VK_ENTER){
             nave = new Nave(inicialx,inicialy);
+                            fase.setLevel(0);
                             atualizarFase();
                             gameover=false; 
                             score=0;
@@ -566,6 +562,18 @@ return escolhido;
             }      
              
         }
+                      
+    }
+    
+    public void keyPressed(KeyEvent e){
+        fase.keyPressed(e);
+        
+                if(gameover==false && !fase.isPaused()){
+        nave.keyPressed(e);                   
+               
+        }
+                
+        
         
          
     }

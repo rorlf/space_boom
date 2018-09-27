@@ -5,6 +5,7 @@
  */
 package elementos;
 
+import br.com.br.area1.cg.MainFrameBase;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,14 @@ private int contador1,contador2,contador3,contador4;
              
 
     }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
     
     
     public void newPowerUp(double x, double y){
@@ -58,8 +67,9 @@ private int contador1,contador2,contador3,contador4;
     }
     
     public void checarFase(){
-    if( contador1==0 && contador2==0 && contador3==0 && contador4==0){
+    if( contador1==0 && contador2==0 && contador3==0 && contador4==0 ){
             wait=true;
+            if(inimigos.isEmpty()){
              tempowait+=1;
 
             if(tempowait>1000){
@@ -69,10 +79,10 @@ private int contador1,contador2,contador3,contador4;
            setFases();
             }
     }
-    }
+    }}
     
     public String stringFase(){
-    if(wait==true && level>=0 && level<=10){
+    if(wait==true && level>=0 && level<=10 && inimigos.isEmpty()){
         return "Fase "+String.valueOf(level+1);}
     
     return "";
@@ -137,42 +147,39 @@ private int contador1,contador2,contador3,contador4;
     }
         private int getlocaly(){
      Random random = new Random();
-        int valor =random.nextInt(5);
-        if(valor==5){
-        return 40;
+          int divisao= MainFrameBase.BOARD_HEIGHT/80;
+   
+     int valor =random.nextInt(divisao);
+     int localy=40;
+     int contadory=0;
+     while(localy<(MainFrameBase.BOARD_HEIGHT-160)){
+      if(valor==contadory){
+        return localy;
         }
-        if(valor==4){
-        return 120;
-        }
-        if(valor==3){
-        return 200;
-        }
-        if(valor==2){
-        return 280;
-        }
-         if(valor==1){
-        return 440;
-        }
-         
-        return 360;
+      contadory++;
+      localy+=80;
+     }
+       
+
+        return localy;
     }
     private int getlocalX(){
      Random random = new Random();
                 int valor =random.nextInt(5);
 
         if(valor==5){
-        return 820;
+        return MainFrameBase.BOARD_WIDTH+20;
         }
         if(valor==4){
-        return 850;
+        return MainFrameBase.BOARD_WIDTH+50;
         }
         if(valor==3){
-        return 880;
+        return MainFrameBase.BOARD_WIDTH+80;
         }
         if(valor==2){
-        return 840;
+        return MainFrameBase.BOARD_WIDTH+40;
         }
-        return 900;
+        return MainFrameBase.BOARD_WIDTH+100;
     }
     public List<Inimigo1> getInimigos(){
     return inimigos;

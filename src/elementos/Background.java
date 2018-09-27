@@ -44,7 +44,7 @@ public class Background {
      public void atualizarEstrelas(int tamanho, int velocidade){
          tempo++;
          if(velocidade==1){
-         if(tempo>80){
+         if(tempo>180){
               for (Estrela estrela : estrelas) {
                      Random random = new Random();
                    estrela.setX(random.nextInt(800));

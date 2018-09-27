@@ -263,7 +263,7 @@ public class Inimigo1 {
     }
     
      public Rectangle getBounds() {
-        return new Rectangle((int)x, (int)y+1, width, height-25);
+        return new Rectangle((int)x, (int)y+1, width, height-20);
     }
     
 }
