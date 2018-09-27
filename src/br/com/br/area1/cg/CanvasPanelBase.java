@@ -33,6 +33,7 @@ import javax.swing.JPanel;
 public class CanvasPanelBase extends JPanel implements Runnable{
     private Nave nave;
     private Fase fase;
+    private int widthTela=MainFrameBase.BOARD_WIDTH, heightTela=MainFrameBase.BOARD_HEIGHT;
     
     private Background background;
     private int score,flag=0,contInvul=0;
@@ -122,8 +123,14 @@ public class CanvasPanelBase extends JPanel implements Runnable{
             g.setColor(Color.white);
             g.fillOval(estrela.getX(), estrela.getY(), estrela.getTamanho(), estrela.getTamanho());
         }
+                
+                 Font turboFont = new Font ("Arial", 1, 20);
+                 g2d.setColor(Color.red);
+
+         g2d.setFont(turboFont);
+        g2d.drawString("TURBO: ", 40, heightTela-60);
         
-         g2d.drawImage(turbo, 100,520,nave.getContadorTurboOn()/10,25, this);
+         g2d.drawImage(turbo, 120,heightTela-80,nave.getContadorTurboOn()/20,25, this);
          
          if(nave.getVida()>=1){
              g2d.drawImage(vida, 20,20,this);
@@ -133,11 +140,11 @@ public class CanvasPanelBase extends JPanel implements Runnable{
              g2d.drawImage(vida, 90,20,this);
          }
            if(nave.getLimiteMissil()>=1){
-             g2d.drawImage(missilArmory, 630,20,this);
+             g2d.drawImage(missilArmory, widthTela-170,20,this);
              if (nave.getLimiteMissil()>=2)
-             g2d.drawImage(missilArmory, 665,20,this);
+             g2d.drawImage(missilArmory, widthTela-135,20,this);
               if (nave.getLimiteMissil()>=3)
-             g2d.drawImage(missilArmory, 700,20,this);
+             g2d.drawImage(missilArmory, widthTela-100,20,this);
          }
          
          

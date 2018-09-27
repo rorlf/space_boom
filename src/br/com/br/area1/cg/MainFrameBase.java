@@ -18,7 +18,7 @@ import javax.swing.SwingUtilities;
  * @author oberdan
  */
 public class MainFrameBase extends JFrame implements MouseMotionListener{
-    public static int BOARD_WIDTH=800, BOARD_HEIGHT=600;
+    public static int BOARD_WIDTH=1000, BOARD_HEIGHT=600;
     Cursor blankCursor = null;
     
     public MainFrameBase(){
@@ -27,6 +27,7 @@ public class MainFrameBase extends JFrame implements MouseMotionListener{
         add(new CanvasPanelBase());
         setSize(BOARD_WIDTH, BOARD_HEIGHT);
         setLocationRelativeTo(null);
+        setResizable(false);
         
         blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(Toolkit.getDefaultToolkit().createImage("nada.png"), new Point(0, 0), "blankCursor"); 
         addMouseMotionListener(this);

@@ -5,6 +5,7 @@
  */
 package elementos;
 
+import br.com.br.area1.cg.MainFrameBase;
 import java.awt.Graphics2D;
 import static java.lang.Math.random;
 import java.util.ArrayList;
@@ -17,18 +18,18 @@ import java.util.Random;
  */
 public class Background {
     private List<Estrela> estrelas;
-    int contador,tempo;
+    int contador,tempo,quantia;
     
     
     
      public Background() {
         estrelas = new ArrayList<>();
-        atualizarEstrelas(5,1);
            contador=0;
            tempo=0;
-            for(int estrelass=0;estrelass<100;estrelass++){
+           quantia = (MainFrameBase.BOARD_WIDTH+MainFrameBase.BOARD_HEIGHT)/10;
+            for(int estrelass=0;estrelass<quantia;estrelass++){
                                  Random random = new Random();
-                 estrelas.add(new Estrela(random.nextInt(800), random.nextInt(600),5));
+                 estrelas.add(new Estrela(random.nextInt(MainFrameBase.BOARD_WIDTH), random.nextInt(MainFrameBase.BOARD_HEIGHT),5));
                  tempo=0;
          }
 
@@ -47,8 +48,8 @@ public class Background {
          if(tempo>180){
               for (Estrela estrela : estrelas) {
                      Random random = new Random();
-                   estrela.setX(random.nextInt(800));
-                   estrela.setY(random.nextInt(600));
+                   estrela.setX(random.nextInt(MainFrameBase.BOARD_WIDTH));
+                   estrela.setY(random.nextInt(MainFrameBase.BOARD_HEIGHT));
                    tempo=0;
         }
          }
@@ -58,8 +59,8 @@ public class Background {
          if(tempo>50){
               for (Estrela estrela : estrelas) {
                      Random random = new Random();
-                   estrela.setX(random.nextInt(800));
-                   estrela.setY(random.nextInt(600));
+                   estrela.setX(random.nextInt(MainFrameBase.BOARD_WIDTH));
+                   estrela.setY(random.nextInt(MainFrameBase.BOARD_HEIGHT));
                    tempo=0;
         }
          }
@@ -69,8 +70,8 @@ public class Background {
          if(tempo>30){
               for (Estrela estrela : estrelas) {
                      Random random = new Random();
-                   estrela.setX(random.nextInt(800));
-                   estrela.setY(random.nextInt(600));
+                    estrela.setX(random.nextInt(MainFrameBase.BOARD_WIDTH));
+                   estrela.setY(random.nextInt(MainFrameBase.BOARD_HEIGHT));
                    tempo=0;
         }
          }
@@ -80,8 +81,8 @@ public class Background {
          if(tempo>10){
               for (Estrela estrela : estrelas) {
                      Random random = new Random();
-                   estrela.setX(random.nextInt(800));
-                   estrela.setY(random.nextInt(600));
+                    estrela.setX(random.nextInt(MainFrameBase.BOARD_WIDTH));
+                   estrela.setY(random.nextInt(MainFrameBase.BOARD_HEIGHT));
                    tempo=0;
         }
          }
