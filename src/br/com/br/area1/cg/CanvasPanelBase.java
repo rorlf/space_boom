@@ -196,7 +196,7 @@ public class CanvasPanelBase extends JPanel implements Runnable{
             Font myFont = new Font ("Arial", 1, 20); 
              g2d.setColor(Color.white);
             g2d.setFont(myFont);           
-            g2d.drawString(String.valueOf(score), 350, 30);
+            g2d.drawString(String.valueOf(score), (widthTela/2)-50, 30);
             
              if(nave.isVisible() && !nave.isInvulneravel()){
         g2d.drawImage(nave.getImage(), (int)nave.getX(),(int)nave.getY(), this);
@@ -212,7 +212,7 @@ public class CanvasPanelBase extends JPanel implements Runnable{
                  g2d.setColor(Color.pink);
 
          g2d.setFont(gameover);
-        g2d.drawString("GAME OVER", 195, 250);
+        g2d.drawString("GAME OVER", (widthTela/2)-150, 250);
         
         }
          
@@ -220,7 +220,7 @@ public class CanvasPanelBase extends JPanel implements Runnable{
                  g2d.setColor(Color.red);
 
          g2d.setFont(wait);
-        g2d.drawString(fase.stringFase(), 220, 250);
+        g2d.drawString(fase.stringFase(), (widthTela/2)-150, 250);
          
          
           if(fase.isPaused()){
@@ -228,7 +228,7 @@ public class CanvasPanelBase extends JPanel implements Runnable{
                  g2d.setColor(Color.pink);
 
          g2d.setFont(paused);
-        g2d.drawString("Pause", 195, 250);
+        g2d.drawString("Pause", (widthTela/2)-150, 250);
         
         }
     }

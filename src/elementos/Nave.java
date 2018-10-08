@@ -63,8 +63,8 @@ private Inimigo1 alvo[];
       contadorTurboOn=5000;
       limiteMissil=3;
       invulneravel=false;
-                                somTiro = new Sound("D:\\Rorlf\\java2d\\Space_Boom\\src\\sounds\\Laser.wav");
-                                                           somMissil = new Sound("D:\\Rorlf\\java2d\\Space_Boom\\src\\sounds\\Missil.wav");
+                                somTiro = new Sound("src/sounds/Laser.wav");
+                                 somMissil = new Sound("src/sounds/Missil.wav");
 
 
      
