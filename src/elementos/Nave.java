@@ -20,8 +20,8 @@ import javax.swing.ImageIcon;
 public class Nave {
     private double x;
     private double y;
-    private double dy;
-    private double dx;
+    private double dyP,dyM;
+    private double dxP,dxM;
 
     private int width;
     private int height;
@@ -181,9 +181,16 @@ width = nave_image_turbo.getWidth(null);
     }
     
     public void atualizar(){
-        x+=dx;
-    
-    y+=dy;
+    	if(x>=0)
+    		x+=dxM;
+    	
+    	if(x<=MainFrameBase.BOARD_WIDTH-53)
+            x+=dxP;
+    	if(y>=0)
+    y+=dyM;
+    	if(y>=MainFrameBase.BOARD_HEIGHT-20)
+    	    y+=dyP;	
+    	
     if(turbo==true){
     contadorTurboOn-=4;
     speed=2;
@@ -219,6 +226,8 @@ width = nave_image_turbo.getWidth(null);
          public void checarAlvo(){
          
          }
+         
+        
     
     public void keyPressed(KeyEvent e) {
 
@@ -230,34 +239,34 @@ width = nave_image_turbo.getWidth(null);
         }
         
         if (key == KeyEvent.VK_LEFT) {
-           
+          
             if(turbo==false)
-            dx = -0.5;
+            dxM = -0.5;
             else
-                dx = -1;
+                dxM = -1;
         }
 
         if (key == KeyEvent.VK_RIGHT) {
              if(turbo==false)
-            dx = 0.5;
+            dxP = 0.5;
              
              else
-                dx = 1;
+                dxP = 1;
              
         }
 
         if (key == KeyEvent.VK_UP) {
                if(turbo==false)
-            dy = -0.5;
+            dyM = -0.5;
             else
-                dy = -1;
+                dyM = -1;
         }
 
         if (key == KeyEvent.VK_DOWN) {
                if(turbo==false)
-            dy = 0.5;
+            dyP = 0.5;
             else
-                dy = 1;
+                dyP = 1;
         }
         
     }
@@ -267,19 +276,19 @@ public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
 
         if (key == KeyEvent.VK_LEFT) {
-            dx = 0;
+            dxM = 0;
         }
 
         if (key == KeyEvent.VK_RIGHT) {
-            dx = 0;
+            dxP = 0;
         }
 
         if (key == KeyEvent.VK_UP) {
-            dy = 0;
+            dyM = 0;
         }
 
         if (key == KeyEvent.VK_DOWN) {
-            dy = 0;
+            dyP = 0;
         }
         if (key == KeyEvent.VK_A) {
             if(turbo==true){

@@ -18,7 +18,7 @@ import javax.swing.SwingUtilities;
  * @author oberdan
  */
 public class MainFrameBase extends JFrame implements MouseMotionListener{
-    public static int BOARD_WIDTH=1000, BOARD_HEIGHT=600;
+    public static int BOARD_WIDTH=250, BOARD_HEIGHT=250;
     Cursor blankCursor = null;
     
     public MainFrameBase(){
