@@ -12,6 +12,7 @@ import elementos.Inimigo1;
 import elementos.Missil;
 import elementos.Nave;
 import elementos.PowerUp;
+import elementos.Sound;
 import elementos.Tiro;
 import java.awt.Color;
 import java.awt.Font;
@@ -39,6 +40,7 @@ public class CanvasPanelBase extends JPanel implements Runnable{
     private int score,flag=0,contInvul=0;
     private boolean gameover,paused;
         private Image turbo,vida,missilArmory;
+        private Sound somGameover;
         
         
 
@@ -88,6 +90,9 @@ public class CanvasPanelBase extends JPanel implements Runnable{
          turbo = new ImageIcon(this.getClass().getResource("/imagens/turbo.png")).getImage();
           vida = new ImageIcon(this.getClass().getResource("/imagens/gui_spaceship.png")).getImage();
           missilArmory= new ImageIcon(this.getClass().getResource("/imagens/gui_missile.png")).getImage();
+          
+                                           somGameover = new Sound("src/sounds/Gameover.wav");
+
 
 
 
@@ -171,10 +176,15 @@ public class CanvasPanelBase extends JPanel implements Runnable{
         
          List<Inimigo1> inimigos = fase.getInimigos();
 
-        for (Inimigo1 inimigo : inimigos) {            
+        for (Inimigo1 inimigo : inimigos) { 
+            if(inimigo.getTipo()==5){
+            g2d.drawImage(inimigo.getImage(), (int)inimigo.getX(),
+                    (int)inimigo.getY(),inimigo.getWidth(),inimigo.getHeight(), this);
+            }
+            else{
             g2d.drawImage(inimigo.getImage(), (int)inimigo.getX(),
                     (int)inimigo.getY(),inimigo.getWidth()-15,inimigo.getHeight()-15, this);
-            
+            }
             
             tiros = inimigo.getTiros();
             for (Tiro tiro : tiros) {
@@ -242,6 +252,7 @@ public class CanvasPanelBase extends JPanel implements Runnable{
             }
     if(nave.getVida()<=0){
     gameover=true;
+    somGameover.play();
     }
     }
 
@@ -343,6 +354,13 @@ public class CanvasPanelBase extends JPanel implements Runnable{
                 }
                 }
                 
+                 if(inimigo.getX()<MainFrameBase.BOARD_WIDTH && (inimigo.getTipo()==5 )){
+                double chanceDeTiro = Math.random() * 100;
+                if(chanceDeTiro<=0.50){
+                inimigo.atirar();
+                }
+                }
+                
             } else {
                 
                 inimigos.remove(i);
@@ -355,6 +373,7 @@ public class CanvasPanelBase extends JPanel implements Runnable{
 
     private void checarColisao() {
             Rectangle r3 = nave.getBounds();
+            
 
             
                List<PowerUp> powerUps = fase.getPowerUps();
@@ -397,6 +416,29 @@ public class CanvasPanelBase extends JPanel implements Runnable{
                     nave.setX(inicialx);
                      nave.setY(inicialy);
                                           nave.setInvulneravel(true);
+                                          inimigo.setVida(inimigo.getVida()-5);
+                                          
+                                                                     if(inimigo.getVida()<=0){
+                        fase.newPowerUp(inimigo.getX(), inimigo.getY());
+                    inimigo.setVisible(false);
+                    int tipoInimigo = inimigo.getTipo();
+                if (tipoInimigo ==1){
+                score+=10;
+                }
+                if (tipoInimigo ==2){
+                score+=50;
+                }
+                 if (tipoInimigo ==3){
+                score+=100;
+                }
+                  if (tipoInimigo ==4){
+                score+=200;
+                }
+                      if (tipoInimigo ==5){
+                score+=2000;
+                }
+                    }
+
 
                     }
                 }}
@@ -447,6 +489,9 @@ public class CanvasPanelBase extends JPanel implements Runnable{
                   if (tipoInimigo ==4){
                 score+=200;
                 }
+                      if (tipoInimigo ==5){
+                score+=2000;
+                }
                     }
                 }
             }
@@ -485,6 +530,9 @@ public class CanvasPanelBase extends JPanel implements Runnable{
                 }
                   if (tipoInimigo ==4){
                 score+=200;
+                }
+                     if (tipoInimigo ==5){
+                score+=2000;
                 }
                     }
                 }
@@ -527,6 +575,7 @@ Inimigo1 escolhido = null;
         }
 return escolhido;
     }
+     
        
        
        
@@ -561,8 +610,11 @@ return escolhido;
                       if(gameover==true){
         if (e.getKeyCode()== KeyEvent.VK_ENTER){
             nave = new Nave(inicialx,inicialy);
-                            fase.setLevel(0);
-                            atualizarFase();
+            somGameover.stop();
+                            fase.resetFase();
+                              fase.setLevel(0);
+
+                            atualizarFase();                            
                             gameover=false; 
                             score=0;
 

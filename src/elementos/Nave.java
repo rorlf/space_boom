@@ -184,11 +184,11 @@ width = nave_image_turbo.getWidth(null);
     	if(x>=0)
     		x+=dxM;
     	
-    	if(x<=MainFrameBase.BOARD_WIDTH-53)
+    	if(x<=MainFrameBase.BOARD_WIDTH-60)
             x+=dxP;
     	if(y>=0)
     y+=dyM;
-    	if(y>=MainFrameBase.BOARD_HEIGHT-20)
+    	if(y<=MainFrameBase.BOARD_HEIGHT-65)
     	    y+=dyP;	
     	
     if(turbo==true){

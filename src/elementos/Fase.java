@@ -20,7 +20,7 @@ public class Fase {
     private int x=0;
     private boolean paused,flag,wait,gameover;
 private int t,tempowait=0;
-private int contador1,contador2,contador3,contador4;
+private int contador1,contador2,contador3,contador4,contador5;
   
     private List<Inimigo1> inimigos;
     
@@ -38,6 +38,7 @@ private int contador1,contador2,contador3,contador4;
                            contador2=0;
                            contador3=0;
                            contador4=0;
+                           contador5=0;
                          wait=true;
                          
              
@@ -67,7 +68,7 @@ private int contador1,contador2,contador3,contador4;
     }
     
     public void checarFase(){
-    if( contador1==0 && contador2==0 && contador3==0 && contador4==0 ){
+    if( contador1==0 && contador2==0 && contador3==0 && contador4==0 && contador5==0 ){
             wait=true;
             if(inimigos.isEmpty()){
              tempowait+=1;
@@ -83,10 +84,23 @@ private int contador1,contador2,contador3,contador4;
     
     public String stringFase(){
     if(wait==true && level>=0 && level<=10 && inimigos.isEmpty()){
-        return "Fase "+String.valueOf(level+1);}
+        String boss="";
+        if(level+1==5)
+                boss="\n\n BOSS!!!";
+        return "Fase \n"+String.valueOf(level+1)+boss;}
     
     return "";
     }
+    
+     public void resetFase(){
+        inimigos.clear();
+        powerUps.clear();
+        contador1=0;
+        contador2=0;
+        contador3=0;
+        contador4=0;
+        contador5=0;
+        }
     
    
     
@@ -94,8 +108,10 @@ private int contador1,contador2,contador3,contador4;
         checarFase();
         if(wait==false){
         if(t>500){              
-    
-            
+    if(contador5==1)
+                 inimigos.add(new Inimigo1(MainFrameBase.BOARD_WIDTH-250,MainFrameBase.BOARD_HEIGHT/2-150,tipo())); 
+
+            else 
             inimigos.add(new Inimigo1(getlocalX(),getlocaly(),tipo())); 
                                     
         t=0;   
@@ -108,10 +124,11 @@ private int contador1,contador2,contador3,contador4;
            int c2=contador2;
                int c3=contador3;
                   int c4=contador4;
-    if(c1>0||c2>0||c3>0||c4>0){
+                    int c5= contador5;
+    if(c1>0||c2>0||c3>0||c4>0 || c5>0){
          Random random = new Random();
 
-         while(c1==contador1 && c2==contador2 && c3==contador3 && c4==contador4){
+         while(c1==contador1 && c2==contador2 && c3==contador3 && c4==contador4 && c5==contador5){
                               int valor =random.nextInt(5);
  if(valor==1){
         if(c1>0){
@@ -137,6 +154,12 @@ private int contador1,contador2,contador3,contador4;
         if(c4>0){
         contador4-=1;
         return 4;
+        }
+        }
+    if(valor==0){
+        if(c5>0){
+        contador5-=1;
+        return 5;
         }
         }
     
@@ -246,7 +269,9 @@ public void keyReleased(KeyEvent e) {
       contador1=10;
       contador2=0;
       contador3=0;
-      contador4=0; 
+      contador4=0;
+            contador5=0; 
+
     }
      if(level==2){
       contador1=0;
@@ -267,10 +292,12 @@ public void keyReleased(KeyEvent e) {
       contador4=0; 
     }
         if(level==5){
-      contador1=35;
-      contador2=35;
-      contador3=35;
+      contador1=0;
+      contador2=0;
+      contador3=0;
       contador4=0; 
+      contador5=1; 
+
     }
          if(level==6){
       contador1=40;

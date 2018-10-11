@@ -30,6 +30,9 @@ public class Sound {
           
 
 }
+    public void stop(){
+    clip.stop();
+    }
     
     
     public void play(){
@@ -40,7 +43,7 @@ public class Sound {
         audioInputStream = AudioSystem.getAudioInputStream(new File(nome).getAbsoluteFile());
         AudioFormat format = audioInputStream.getFormat();
         DataLine.Info info = new DataLine.Info(Clip.class, format);
-        Clip clip = (Clip)AudioSystem.getLine(info);
+        clip = (Clip)AudioSystem.getLine(info);
         clip.open(audioInputStream);
         clip.start();
         while(clip.isRunning())

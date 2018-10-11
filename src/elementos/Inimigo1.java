@@ -5,6 +5,7 @@
  */
 package elementos;
 
+import br.com.br.area1.cg.MainFrameBase;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -59,6 +60,11 @@ public class Inimigo1 {
            if (tipo==4){
         this.vida=5;
         criarTrajetoria();
+        }
+               if (tipo==5){
+                  height=height+100;
+                  width=width+100;
+        this.vida=50;
         }
 
     }
@@ -130,14 +136,14 @@ public class Inimigo1 {
              if (tipo==5){
             if(andaPraCima==1 && andaPraDireita==0){
                   x -= 0.1;
-                  y -= 0.1;
+                  y -= 0.2;
                   contador+=1;
                   contadorFrente += 1;
              }
              
               if(andaPraCima==0 && andaPraDireita==0){
                   x -= 0.1;
-                  y += 0.1;
+                  y += 0.2;
                   contador-=1;
                   contadorFrente += 1;
 
@@ -145,30 +151,30 @@ public class Inimigo1 {
               
                 if(andaPraCima==1 && andaPraDireita==1){
                   x += 0.1;
-                  y -= 0.1;
+                  y -= 0.2;
                   contador+=1;
                   contadorFrente -= 1;
              }
              
               if(andaPraCima==0 && andaPraDireita==1){
                   x += 0.1;
-                  y += 0.1;
+                  y += 0.2;
                   contador-=1;
                   contadorFrente -= 1;
 
              }
               
-              if(contador<=-400){
+              if(getY()>=MainFrameBase.BOARD_HEIGHT-200){
               andaPraCima=1;
               }
-                if(contador>=400){
+                if(getY()<=50){
               andaPraCima=0;
               }
                 
-                if(contadorFrente>=200){
+                if(getX()<=100){
               andaPraDireita=1;
               }
-                if(contadorFrente<=-200){
+                if(getX()>=MainFrameBase.BOARD_WIDTH-150){
               andaPraDireita=0;
               }
          if (x < 0) {
@@ -190,10 +196,15 @@ public class Inimigo1 {
       }
       
        public void atirar() {
+           if(tipo==5){
+                   tiros.add(new Tiro((int)x - width+100, (int)y + height / 2,-1));
+
+           }
+           else{
         if(tiros.size()<=2) {  
         tiros.add(new Tiro((int)x - width, (int)y + height / 2,-1));
         }
-    }
+    }}
        
         public List<Tiro> getTiros() {
         return tiros;
@@ -213,8 +224,13 @@ public class Inimigo1 {
            if (tipo==4){
                   inimigo = new ImageIcon(this.getClass().getResource("/imagens/enemy4.png")).getImage();
         }
+              if (tipo==5){
+                  inimigo = new ImageIcon(this.getClass().getResource("/imagens/enemy5.png")).getImage();
+        }
 
     }
+        
+       
     
     protected void getImageDimensions() {
 
@@ -234,10 +250,12 @@ public class Inimigo1 {
         return y;
     }
       public int getWidth() {
+         
         return width;
     }
 
     public int getHeight() {
+       
         return height;
     }
     
